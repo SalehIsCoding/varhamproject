@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="./style.css">
+    <title>ثبت آگهی ورهام پروژه</title>
+    <script src="./telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="survey-form">
+            <div class="ad-type-cont form-group">
+                <label class="ad-type-title">نوع آگهی خود را انتخاب کنید</label>
+                <div class="inlin">
+                    <label class="spacer">
+                            <input
+                        name="ad-type"
+                        value="client"
+                        type="radio"
+                        class="input-radio"
+                        checked
+                        />درخواست دهنده
+                      </label>
+                    <label class="spacer">
+                        <input
+                        name="ad-type"
+                        value="developer"
+                        type="radio"
+                        class="input-radio"
+                        />انجام دهنده
+                    </label>
+                </div>
+              </div>
+          <div class="form-group">
+            <label id="name-label" for="name">آیدی تلگرامتون</label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              class="form-control"
+              placeholder="برای مثال : @varham_support"
+              autocomplete="no"
+              disabled
+              required
+              />
+          </div>
+          <div class="form-group">
+            <label id="email-label" for="email">عنوان</label>
+            <input
+              type="text"
+              name="title"
+              id="title"
+              class="form-control"
+              placeholder="تایپ مقاله"
+              autocomplete="no"
+              required
+              />
+            </div>
+          <div class="form-group">
+            <label>متن بدنه آگهی : </label>
+            <textarea
+              id="comments"
+              class="input-textarea form-control"
+              name="comment"
+              placeholder="مثلا : به یک تایپیست برای تایپ یک مقاله نیاز دارم"
+              required
+              autocomplete="no"
+            ></textarea>
+          </div>
+      
+          <div class="form-group">
+            <button type="submit" id="submit" class="submit-button" onclick="submitForm()">
+              ثبت آگهی در کانال
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="error hidden">
+        <h2 style="color: red;">403 Forbidden</h2>
+        <i style="font-weight: bold; color: limegreen;">Coded by @SalehisCoding</i>
+      </div>
+      <script>
+        let user = {};
+        document.addEventListener("DOMContentLoaded", function(event) { 
+            if(window.location.href.includes('?user=') && window.location.href.includes('#tgWeb')){
+              user = JSON.parse(/user=(.*?)#tgWeb/.exec(decodeURIComponent(window.location.href))[1]);
+              document.getElementById("name").value = user.username;
+            } else {
+              document.getElementsByClassName("container")[0].classList.add("hidden");
+              document.getElementsByClassName("error")[0].classList.remove("hidden");
+            }
+        });
+        const submitForm = () => {
+          const body = {
+            type: 'advertise',
+            ad_type: Array.from(document.getElementsByName('ad-type')).filter((elem)=> elem.checked)[0].value,
+            username: '@' + document.getElementById("name").value,
+            title: document.getElementById('title').value,
+            body: document.getElementById("comments").value,
+            time: Date.now()
+          };
+          window.Telegram.WebApp.sendData(JSON.stringify(body));
+        }
+    </script>
+</body>
+</html>
